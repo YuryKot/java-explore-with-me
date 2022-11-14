@@ -17,9 +17,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     @Override
     public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
         int page = from / size;

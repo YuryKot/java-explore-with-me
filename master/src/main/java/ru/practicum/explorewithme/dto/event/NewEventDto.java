@@ -2,8 +2,6 @@ package ru.practicum.explorewithme.dto.event;
 
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.explorewithme.model.Location;
 
 import javax.validation.constraints.NotNull;

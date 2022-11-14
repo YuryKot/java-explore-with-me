@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "events")
-@Data @NoArgsConstructor
+@Data
+@NoArgsConstructor
 public class Event {
 
     @Id

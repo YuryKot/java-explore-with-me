@@ -8,9 +8,8 @@ import java.time.format.DateTimeFormatter;
 
 public class EndpointHitMapper {
 
-    final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static EndpointHit toEndpointHit(EndpointHitDto endpointHitDto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EndpointHit endpointHit = new EndpointHit();
         endpointHit.setIp(endpointHitDto.getIp());
         endpointHit.setUri(endpointHit.getUri());

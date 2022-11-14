@@ -9,7 +9,7 @@ import ru.practicum.explorewithme.model.EndpointHit;
 
 @Service
 @RequiredArgsConstructor
-public class EndpointHitServiceImpl implements EndpointHitService{
+public class EndpointHitServiceImpl implements EndpointHitService {
 
     private final EndpointHitRepository endpointHitRepository;
 

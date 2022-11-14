@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.mapper;
 
+import lombok.AllArgsConstructor;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.NewEventDto;
@@ -12,11 +13,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
+@AllArgsConstructor
 public class EventMapper {
 
-    final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     public static Event toEvent(NewEventDto newEventDto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Event event = new Event();
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCreatedOn(LocalDateTime.now());
@@ -37,6 +41,7 @@ public class EventMapper {
     }
 
     public static EventFullDto toEventFullDto(Event event) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setId(event.getId());
         eventFullDto.setAnnotation(event.getAnnotation());
@@ -54,6 +59,7 @@ public class EventMapper {
     }
 
     public static EventShortDto toEventShortDto(Event event) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setId(event.getId());
         eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
