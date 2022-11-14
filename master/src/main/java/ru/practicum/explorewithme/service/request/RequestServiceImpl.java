@@ -111,7 +111,7 @@ public class RequestServiceImpl implements RequestService {
                 () -> new UserNotFoundException(userId));
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RequestNotFoundExceprion(requestId));
-        if (request.getRequester().getId() != userId) {
+        if (request.getRequester().getId().equals(userId)) {
             throw new RequestParamException(String.format("User with id=%d is not initiator request with id=%d", userId, requestId));
         }
         request.setStatus(StatusRequest.REJECTED);

@@ -76,7 +76,7 @@ public class EventServiceImpl implements EventService {
                 () -> new UserNotFoundException(userId));
         Event event = eventRepository.findById(updateEventRequestDto.getId())
                 .orElseThrow(() -> new EventNotFoundException(updateEventRequestDto.getId()));
-        if (event.getInitiator().getId() != userId) {
+        if (event.getInitiator().getId().equals(userId)) {
             throw new UpdateImpossibleException("User with id=%d can`t update event with id=%d");
         }
         if (event.getState() != EventState.CANCELED || event.getState() != EventState.PENDING) {
@@ -179,7 +179,7 @@ public class EventServiceImpl implements EventService {
                 () -> new UserNotFoundException(userId));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
-        if (event.getInitiator().getId() != userId) {
+        if (!event.getInitiator().getId().equals(userId)) {
             throw new UpdateImpossibleException("User with id=%d can`t update event with id=%d");
         }
         if (event.getState() != EventState.PENDING) {

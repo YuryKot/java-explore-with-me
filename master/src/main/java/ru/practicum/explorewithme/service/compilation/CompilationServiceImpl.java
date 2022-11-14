@@ -45,7 +45,7 @@ public class CompilationServiceImpl implements CompilationService {
                 .orElseThrow(() -> new CompilationNotFoundException(compId));
         compilation.setEvents(compilation.getEvents()
                 .stream()
-                .filter(event -> event.getId() != eventId)
+                .filter(event -> !event.getId().equals(eventId))
                 .collect(Collectors.toSet()));
     }
 
