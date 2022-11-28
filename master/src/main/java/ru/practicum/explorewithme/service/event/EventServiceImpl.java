@@ -115,7 +115,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEvent(Long userId, Long eventId) {
         findUser(userId);
         Event event = findEvent(eventId);
-        if (event.getInitiator().getId().equals(userId)) {
+        if (!event.getInitiator().getId().equals(userId)) {
             throw new EventNotFoundException(eventId);
         }
         return getEventFullDto(event);
