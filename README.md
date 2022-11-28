@@ -1,2 +1,2 @@
 # java-explore-with-me
-Template repository for ExploreWithMe project.
+### [Pull request main <- develop](https://github.com/YuryKot/java-explore-with-me/pull/1)

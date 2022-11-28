@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dao.EndpointHitRepository;
 import ru.practicum.explorewithme.dto.EndpointHitDto;
+import ru.practicum.explorewithme.mapper.DateTimeMapper;
 import ru.practicum.explorewithme.mapper.EndpointHitMapper;
 import ru.practicum.explorewithme.model.ViewStats;
 import ru.practicum.explorewithme.model.EndpointHit;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -26,16 +26,16 @@ public class EndpointHitServiceImpl implements EndpointHitService {
 
     @Override
     public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         LocalDateTime startDateTime;
         if (start != null) {
-            startDateTime = LocalDateTime.parse(start, formatter);
+            startDateTime = DateTimeMapper.toLocalDateTime(start);
         } else {
             startDateTime = LocalDateTime.of(2000, 1, 1, 0, 0);
         }
         LocalDateTime endDateTime;
         if (end != null) {
-            endDateTime = LocalDateTime.parse(end, formatter);
+            endDateTime = DateTimeMapper.toLocalDateTime(end);
         } else {
             endDateTime = LocalDateTime.of(2999, 1, 1, 0, 0);
         }

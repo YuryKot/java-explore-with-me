@@ -1,9 +1,9 @@
 package ru.practicum.explorewithme.model.event;
 
 import lombok.Data;
+import ru.practicum.explorewithme.mapper.DateTimeMapper;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -17,9 +17,8 @@ public class EndpointHit {
     private String timestamp;
 
     public EndpointHit(String uri, String ip) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         this.uri = uri;
         this.ip = ip;
-        this.timestamp = formatter.format(LocalDateTime.now());
+        this.timestamp = DateTimeMapper.toString(LocalDateTime.now());
     }
 }

@@ -11,7 +11,6 @@ import ru.practicum.explorewithme.model.event.Location;
 import javax.validation.ValidationException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 @AllArgsConstructor
@@ -19,12 +18,11 @@ public class EventMapper {
 
 
     public static Event toEvent(NewEventDto newEventDto) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Event event = new Event();
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCreatedOn(LocalDateTime.now());
         event.setDescription(newEventDto.getDescription());
-        LocalDateTime eventDate = LocalDateTime.parse(newEventDto.getEventDate(), formatter);
+        LocalDateTime eventDate = DateTimeMapper.toLocalDateTime(newEventDto.getEventDate());
         if (Duration.between(LocalDateTime.now(), eventDate).toHours() < 2) {
             throw new ValidationException("The event is less than two hours away");
         }
@@ -40,20 +38,19 @@ public class EventMapper {
     }
 
     public static EventFullDto toEventFullDto(Event event) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setId(event.getId());
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
-        eventFullDto.setCreatedOn(formatter.format(event.getCreatedOn()));
+        eventFullDto.setCreatedOn(DateTimeMapper.toString(event.getCreatedOn()));
         eventFullDto.setDescription(event.getDescription());
-        eventFullDto.setEventDate(formatter.format(event.getEventDate()));
+        eventFullDto.setEventDate(DateTimeMapper.toString(event.getEventDate()));
         eventFullDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventFullDto.setLocation(new Location(event.getLocationLat(), event.getLocationLon()));
         eventFullDto.setPaid(event.isPaid());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
         if (event.getPublishedOn() != null) {
-            eventFullDto.setPublishedOn(formatter.format(event.getPublishedOn()));
+            eventFullDto.setPublishedOn(DateTimeMapper.toString(event.getPublishedOn()));
         }
         eventFullDto.setRequestModeration(event.isRequestModeration());
         eventFullDto.setState(event.getState().toString());
@@ -62,12 +59,11 @@ public class EventMapper {
     }
 
     public static EventShortDto toEventShortDto(Event event) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setAnnotation(event.getAnnotation());
         eventShortDto.setId(event.getId());
         eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
-        eventShortDto.setEventDate(formatter.format(event.getEventDate()));
+        eventShortDto.setEventDate(DateTimeMapper.toString(event.getEventDate()));
         eventShortDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventShortDto.setPaid(event.isPaid());
         eventShortDto.setTitle(event.getTitle());

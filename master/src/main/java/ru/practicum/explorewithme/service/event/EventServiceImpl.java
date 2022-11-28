@@ -5,6 +5,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +19,7 @@ import ru.practicum.explorewithme.exception.CategoryNotFoundException;
 import ru.practicum.explorewithme.exception.EventNotFoundException;
 import ru.practicum.explorewithme.exception.UpdateImpossibleException;
 import ru.practicum.explorewithme.exception.UserNotFoundException;
+import ru.practicum.explorewithme.mapper.DateTimeMapper;
 import ru.practicum.explorewithme.mapper.EventMapper;
 import ru.practicum.explorewithme.model.*;
 import ru.practicum.explorewithme.model.event.*;
@@ -26,7 +28,6 @@ import javax.persistence.EntityManager;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -35,12 +36,14 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
+    @Value("${events.path}")
+    private String eventsPath;
     private final EntityManager entityManager;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final StatisticClient statisticClient;
-    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
@@ -86,7 +89,7 @@ public class EventServiceImpl implements EventService {
         updateEvent(event, updateEventRequestDto);
 
         if (updateEventRequestDto.getEventDate() != null) {
-            LocalDateTime eventDate = LocalDateTime.parse(updateEventRequestDto.getEventDate(), formatter);
+            LocalDateTime eventDate = DateTimeMapper.toLocalDateTime(updateEventRequestDto.getEventDate());
             if (Duration.between(LocalDateTime.now(), eventDate).toHours() < 2) {
                 throw new UpdateImpossibleException("The update event is less than two hours away");
             }
@@ -101,7 +104,7 @@ public class EventServiceImpl implements EventService {
         Event event = findEvent(eventId);
         updateEvent(event, requestDto);
         if (requestDto.getEventDate() != null) {
-            LocalDateTime eventDate = LocalDateTime.parse(requestDto.getEventDate(), formatter);
+            LocalDateTime eventDate = DateTimeMapper.toLocalDateTime(requestDto.getEventDate());
             event.setEventDate(eventDate);
         }
         if (requestDto.getLocation() != null) {
@@ -167,10 +170,10 @@ public class EventServiceImpl implements EventService {
             booleanBuilder.and(qEvent.eventDate.after(LocalDateTime.now()));
         } else {
             if (rangeStart != null) {
-                booleanBuilder.and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart, formatter)));
+                booleanBuilder.and(qEvent.eventDate.after(DateTimeMapper.toLocalDateTime(rangeStart)));
             }
             if (rangeEnd != null) {
-                booleanBuilder.and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd, formatter)));
+                booleanBuilder.and(qEvent.eventDate.before(DateTimeMapper.toLocalDateTime(rangeEnd)));
             }
         }
         booleanBuilder.and(qEvent.state.eq(EventState.PUBLISHED));
@@ -231,10 +234,10 @@ public class EventServiceImpl implements EventService {
             booleanBuilder.and(qEvent.category.id.in(categories));
         }
         if (rangeStart != null) {
-            booleanBuilder.and(qEvent.eventDate.after(LocalDateTime.parse(rangeStart, formatter)));
+            booleanBuilder.and(qEvent.eventDate.after(DateTimeMapper.toLocalDateTime(rangeStart)));
         }
         if (rangeEnd != null) {
-            booleanBuilder.and(qEvent.eventDate.before(LocalDateTime.parse(rangeEnd, formatter)));
+            booleanBuilder.and(qEvent.eventDate.before(DateTimeMapper.toLocalDateTime(rangeEnd)));
         }
         Iterable<Event> events = eventRepository.findAll(booleanBuilder, pageable);
         List<EventFullDto> eventFullDtoList = StreamSupport
@@ -264,7 +267,7 @@ public class EventServiceImpl implements EventService {
     private void setViews(List<? extends EventDto> eventDtoList) {
         List<String> urisList = eventDtoList
                 .stream()
-                .map(e -> String.format("/events/%d", e.getId()))
+                .map(e -> String.format(eventsPath + "%d", e.getId()))
                 .collect(Collectors.toList());
 
         List<ViewStats> viewStatsList = statisticClient.getStatsByUris(urisList);
@@ -273,7 +276,7 @@ public class EventServiceImpl implements EventService {
             eventsDto.setViews(
                     viewStatsList.stream()
                             .filter(v -> v.getUri().equals(
-                                    String.format("/events/%d", eventsDto.getId())))
+                                    String.format(eventsPath + "%d", eventsDto.getId())))
                             .findFirst()
                             .orElse(new ViewStats())
                             .getHits());

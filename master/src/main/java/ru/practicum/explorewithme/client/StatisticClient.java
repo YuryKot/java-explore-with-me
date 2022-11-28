@@ -21,7 +21,7 @@ public class StatisticClient {
                 .uri("/hit")
                 .bodyValue(endpointHit)
                 .retrieve()
-                .bodyToMono(Boolean.class)
+                .toBodilessEntity()
                 .block();
     }
 

@@ -14,6 +14,7 @@ import ru.practicum.explorewithme.model.event.EventSort;
 import ru.practicum.explorewithme.service.category.CategoryService;
 import ru.practicum.explorewithme.service.compilation.CompilationService;
 import ru.practicum.explorewithme.service.event.EventService;
+import ru.practicum.explorewithme.util.RequestBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
@@ -25,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class PublicController {
-
     private final EventService eventService;
 
     private final CategoryService categoryService;
@@ -34,7 +34,7 @@ public class PublicController {
 
     private final CompilationService compilationService;
 
-    @GetMapping("/events")
+    @GetMapping("${events.path}")
     public List<EventShortDto> getEvents(@RequestParam(required = false) String text,
                                          @RequestParam(required = false) List<Long> categories,
                                          @RequestParam(required = false) Boolean paid,
@@ -45,15 +45,17 @@ public class PublicController {
                                          @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                          @Positive @RequestParam(defaultValue = "10") Integer size,
                                          HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         List<EventShortDto> eventShortDtos = eventService.getEventsWithFilter(text, categories, paid,
                 rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         statisticClient.postEndpointHit(new EndpointHit(request.getRequestURI(), request.getRemoteAddr()));
         return eventShortDtos;
     }
 
-    @GetMapping("/events/{id}")
+    @GetMapping("${events.path}" + "/{id}")
     public EventFullDto getEvent(@PathVariable Long id,
                                  HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         EventFullDto eventFullDto = eventService.getEvent(id);
         statisticClient.postEndpointHit(new EndpointHit(request.getRequestURI(), request.getRemoteAddr()));
         return eventFullDto;
@@ -61,24 +63,32 @@ public class PublicController {
 
     @GetMapping("/categories")
     public List<CategoryDto> getCategories(@PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                           @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                           @Positive @RequestParam(defaultValue = "10") Integer size,
+                                           HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return categoryService.getCategories(from, size);
     }
 
     @GetMapping("/categories/{catId}")
-    public CategoryDto getCategory(@PathVariable Long catId) {
+    public CategoryDto getCategory(@PathVariable Long catId,
+                                   HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return categoryService.getCategory(catId);
     }
 
     @GetMapping("/compilations")
     public List<CompilationDto> getCompilations(@RequestParam(defaultValue = "false") Boolean pinned,
                                                 @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                                @Positive @RequestParam(defaultValue = "10") Integer size,
+                                                HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return compilationService.getCompilations(pinned, from, size);
     }
 
     @GetMapping("/compilations/{compId}")
-    public CompilationDto getCompilation(@PathVariable Long compId) {
+    public CompilationDto getCompilation(@PathVariable Long compId,
+                                         HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return compilationService.getCompilation(compId);
     }
 }

@@ -16,7 +16,9 @@ import ru.practicum.explorewithme.service.category.CategoryService;
 import ru.practicum.explorewithme.service.compilation.CompilationService;
 import ru.practicum.explorewithme.service.event.EventService;
 import ru.practicum.explorewithme.service.user.UserService;
+import ru.practicum.explorewithme.util.RequestBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -44,87 +46,119 @@ public class AdminController {
                                         @RequestParam(required = false) String rangeStart,
                                         @RequestParam(required = false) String rangeEnd,
                                         @PositiveOrZero @RequestParam(defaultValue = "0") int from,
-                                        @Positive @RequestParam(defaultValue = "10") int size) {
+                                        @Positive @RequestParam(defaultValue = "10") int size,
+                                        HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PutMapping("/events/{eventId}")
     public EventFullDto updateEvent(@PathVariable Long eventId,
-                                    @RequestBody AdminUpdateEventRequestDto requestDto) {
+                                    @RequestBody AdminUpdateEventRequestDto requestDto,
+                                    HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return eventService.updateEvent(eventId, requestDto);
     }
 
     @PatchMapping("/events/{eventId}/publish")
-    public EventFullDto publishEvent(@PathVariable Long eventId) {
+    public EventFullDto publishEvent(@PathVariable Long eventId,
+                                     HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return eventService.publishEvent(eventId);
     }
 
     @PatchMapping("/events/{eventId}/reject")
-    public EventFullDto publishReject(@PathVariable Long eventId) {
+    public EventFullDto publishReject(@PathVariable Long eventId,
+                                      HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return eventService.rejectEvent(eventId);
     }
 
     @PatchMapping("/categories")
-    public CategoryDto updateCategory(@Valid @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@Valid @RequestBody CategoryDto categoryDto,
+                                      HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return categoryService.updateCategory(categoryDto);
     }
 
     @PostMapping("/categories")
-    public CategoryDto addCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
+    public CategoryDto addCategory(@Valid @RequestBody NewCategoryDto newCategoryDto,
+                                   HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return categoryService.addCategory(newCategoryDto);
     }
 
     @DeleteMapping("/categories/{catId}")
-    public void deleteCategory(@PathVariable Long catId) {
+    public void deleteCategory(@PathVariable Long catId,
+                               HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         categoryService.deleteCategory(catId);
     }
 
     @GetMapping("/users")
     public List<UserDto> getUsers(@RequestParam List<Long> ids,
                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                  @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                  @Positive @RequestParam(defaultValue = "10") Integer size,
+                                  HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return userService.getUsers(ids, from, size);
     }
 
     @PostMapping("/users")
-    public UserDto addUser(@Valid @RequestBody NewUserRequestDto newUserRequestDto) {
+    public UserDto addUser(@Valid @RequestBody NewUserRequestDto newUserRequestDto,
+                           HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return userService.addUser(newUserRequestDto);
     }
 
     @DeleteMapping("/users/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable Long userId,
+                           HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         userService.deleteUser(userId);
     }
 
     @PostMapping("/compilations")
-    public CompilationDto addCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
+    public CompilationDto addCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto,
+                                         HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return compilationService.addCompilation(newCompilationDto);
     }
 
     @DeleteMapping("/compilations/{compId}")
-    public void deleteCompilation(@PathVariable Long compId) {
+    public void deleteCompilation(@PathVariable Long compId,
+                                  HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         compilationService.deleteCompilation(compId);
     }
 
     @DeleteMapping("/compilations/{compId}/events/{eventId}")
     public void deleteEventFromCompilation(@PathVariable Long compId,
-                                           @PathVariable Long eventId) {
+                                           @PathVariable Long eventId,
+                                           HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         compilationService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/compilations/{compId}/events/{eventId}")
     public void addEventToCompilation(@PathVariable Long compId,
-                                      @PathVariable Long eventId) {
+                                      @PathVariable Long eventId,
+                                      HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         compilationService.addEventToCompilation(compId, eventId);
     }
 
     @DeleteMapping("/compilations/{compId}/pin")
-    public void unpinCompilation(@PathVariable Long compId) {
+    public void unpinCompilation(@PathVariable Long compId,
+                                 HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         compilationService.unpinCompilation(compId);
     }
 
     @PatchMapping("/compilations/{compId}/pin")
-    public void pinCompilation(@PathVariable Long compId) {
+    public void pinCompilation(@PathVariable Long compId,
+                               HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         compilationService.pinCompilation(compId);
     }
 }

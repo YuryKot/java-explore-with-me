@@ -15,9 +15,8 @@ public class Controller {
     private final EndpointHitService endpointHitService;
 
     @PostMapping("/hit")
-    public boolean addEndpointHit(@RequestBody EndpointHitDto endpointHitDto) {
+    public void addEndpointHit(@RequestBody EndpointHitDto endpointHitDto) {
         endpointHitService.addEndpointHit(endpointHitDto);
-        return true;
     }
 
     @GetMapping("/stats")
