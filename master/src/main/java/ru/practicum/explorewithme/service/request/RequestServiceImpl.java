@@ -9,6 +9,8 @@ import ru.practicum.explorewithme.dto.ParticipationRequestDto;
 import ru.practicum.explorewithme.exception.*;
 import ru.practicum.explorewithme.mapper.RequestMapper;
 import ru.practicum.explorewithme.model.*;
+import ru.practicum.explorewithme.model.event.Event;
+import ru.practicum.explorewithme.model.event.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,12 +34,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ParticipationRequestDto confirmRequest(Long userId, Long eventId, Long reqId) {
-        userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
-        Request request = requestRepository.findById(reqId)
-                .orElseThrow(() -> new RequestNotFoundExceprion(reqId));
+        findUser(userId);
+        Event event = findEvent(eventId);
+        Request request = findRequest(reqId);
         if (event.getParticipantLimit() == 0 || !event.isRequestModeration()) {
             throw new UpdateImpossibleException("Confirmation is not required");
         }
@@ -48,20 +47,18 @@ public class RequestServiceImpl implements RequestService {
         request.setStatus(StatusRequest.CONFIRMED);
         if (requests.size() + 1 >= event.getParticipantLimit()) {
             requestRepository.findByEvent_IdAndStatus(eventId, StatusRequest.PENDING)
-                    .forEach(r -> r.setStatus(StatusRequest.REJECTED));
+                    .forEach(r -> r.setStatus(StatusRequest.CANCELED));
         }
         return RequestMapper.toParticipationRequestDto(request);
     }
 
     @Override
     public ParticipationRequestDto rejectRequest(Long userId, Long eventId, Long reqId) {
-        userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
-        Request request = requestRepository.findById(reqId)
-                .orElseThrow(() -> new RequestNotFoundExceprion(reqId));
+        findUser(userId);
+        findEvent(eventId);
+        Request request = findRequest(reqId);
         request.setStatus(StatusRequest.REJECTED);
+        requestRepository.save(request);
         return RequestMapper.toParticipationRequestDto(request);
     }
 
@@ -75,10 +72,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ParticipationRequestDto addRequest(Long userId, Long eventId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId));
+        User user = findUser(userId);
+        Event event = findEvent(eventId);
         Request existRequest = requestRepository.findByRequester_IdAndEvent_Id(userId, eventId);
         if (existRequest != null) {
             throw new RequestParamException(String.format("Request with userId=%d, eventId=%d already exist", userId, eventId));
@@ -107,14 +102,28 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId));
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RequestNotFoundExceprion(requestId));
-        if (request.getRequester().getId().equals(userId)) {
+        findUser(userId);
+        Request request = findRequest(requestId);
+        if (!request.getRequester().getId().equals(userId)) {
             throw new RequestParamException(String.format("User with id=%d is not initiator request with id=%d", userId, requestId));
         }
-        request.setStatus(StatusRequest.REJECTED);
+        request.setStatus(StatusRequest.CANCELED);
+        requestRepository.save(request);
         return RequestMapper.toParticipationRequestDto(request);
+    }
+
+    private User findUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    private Event findEvent(Long id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
+    }
+
+    private Request findRequest(Long id) {
+        return requestRepository.findById(id)
+                .orElseThrow(() -> new RequestNotFoundExceprion(id));
     }
 }

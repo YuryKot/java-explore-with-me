@@ -2,13 +2,13 @@ package ru.practicum.explorewithme.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.*;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.NewEventDto;
+import ru.practicum.explorewithme.dto.event.UpdateEventRequestDto;
 import ru.practicum.explorewithme.service.event.EventService;
 import ru.practicum.explorewithme.service.request.RequestService;
 
@@ -50,7 +50,7 @@ public class PrivateController {
     @GetMapping("/{userId}/events/{eventId}")
     public EventFullDto getEvent(@PathVariable Long userId,
                                  @PathVariable Long eventId) {
-        return eventService.getEvent(/*userId, */eventId);
+        return eventService.getEvent(userId, eventId);
     }
 
     @PatchMapping("/{userId}/events/{eventId}")
@@ -85,9 +85,8 @@ public class PrivateController {
     }
 
     @PostMapping("/{userId}/requests")
-    @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addRequest(@PathVariable Long userId,
-                                                    @RequestParam Long eventId) {
+                                              @RequestParam Long eventId) {
         return requestService.addRequest(userId, eventId);
     }
 

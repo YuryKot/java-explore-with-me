@@ -1,10 +1,10 @@
 package ru.practicum.explorewithme.dto.event;
 
 import lombok.Data;
-import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.model.event.Location;
 
 @Data
-public class AdminUpdateEventRequestDto {
+public class AdminUpdateEventRequestDto implements UpdateEventDto {
 
     private String annotation;
 

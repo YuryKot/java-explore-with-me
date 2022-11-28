@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.dao.CategoryRepository;
-import ru.practicum.explorewithme.dto.CategoryDto;
+import ru.practicum.explorewithme.dto.category.CategoryDto;
+import ru.practicum.explorewithme.dto.category.NewCategoryDto;
 import ru.practicum.explorewithme.exception.CategoryNotFoundException;
 import ru.practicum.explorewithme.mapper.CategoryMapper;
 import ru.practicum.explorewithme.model.Category;
@@ -41,12 +42,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryDto.getId())
                 .orElseThrow(() -> new CategoryNotFoundException(categoryDto.getId()));
         category.setName(categoryDto.getName());
+        categoryRepository.save(category);
         return CategoryMapper.toCategoryDto(category);
     }
 
     @Override
-    public CategoryDto addCategory(CategoryDto categoryDto) {
-        Category category = CategoryMapper.toCategory(categoryDto);
+    public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
+        Category category = CategoryMapper.toCategory(newCategoryDto);
         categoryRepository.save(category);
         return CategoryMapper.toCategoryDto(category);
     }

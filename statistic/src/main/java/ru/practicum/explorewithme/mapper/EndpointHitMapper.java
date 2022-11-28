@@ -12,8 +12,8 @@ public class EndpointHitMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EndpointHit endpointHit = new EndpointHit();
         endpointHit.setIp(endpointHitDto.getIp());
-        endpointHit.setUri(endpointHit.getUri());
-        endpointHit.setApp(endpointHit.getApp());
+        endpointHit.setUri(endpointHitDto.getUri());
+        endpointHit.setApp(endpointHitDto.getApp());
         LocalDateTime timestamp = LocalDateTime.parse(endpointHitDto.getTimestamp(), formatter);
         endpointHit.setTimestamp(timestamp);
         return endpointHit;

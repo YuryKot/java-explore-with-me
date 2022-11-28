@@ -1,7 +1,10 @@
-package ru.practicum.explorewithme.model;
+package ru.practicum.explorewithme.model.event;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.explorewithme.model.Category;
+import ru.practicum.explorewithme.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,12 +13,14 @@ import java.time.LocalDateTime;
 @Table(name = "events")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 2000)
     private String annotation;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,6 +30,7 @@ public class Event {
     @Column(name = "created_on")
     private LocalDateTime createdOn;
 
+    @Column(length = 7000)
     private String description;
 
     @Column(name = "event_date")
@@ -42,6 +48,7 @@ public class Event {
 
     private boolean paid;
 
+    @Column(name = "participant_limit")
     private int participantLimit;
 
     @Column(name = "published_on")
@@ -50,6 +57,7 @@ public class Event {
     @Column(name = "request_moderation")
     private boolean requestModeration;
 
+    @Enumerated(EnumType.STRING)
     private EventState state;
 
     private String title;

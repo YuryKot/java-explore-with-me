@@ -1,12 +1,13 @@
 package ru.practicum.explorewithme.model;
 
 import lombok.Data;
+import ru.practicum.explorewithme.model.event.Event;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "compilation")
+@Table(name = "compilations")
 @Data
 public class Compilation {
 

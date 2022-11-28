@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 
 public class RequestMapper {
 
-
     public static ParticipationRequestDto toParticipationRequestDto(Request request) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ParticipationRequestDto participationRequestDto = new ParticipationRequestDto();

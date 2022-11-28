@@ -11,7 +11,6 @@ import ru.practicum.explorewithme.dto.user.UserDto;
 import ru.practicum.explorewithme.mapper.UserMapper;
 import ru.practicum.explorewithme.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
         int page = from / size;
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        List<User> users = new ArrayList<>();
+        List<User> users;
         if (ids != null) {
             users = userRepository.findUserByIdIn(ids, pageable);
         } else {

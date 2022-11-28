@@ -1,12 +1,12 @@
 package ru.practicum.explorewithme.dto.event;
 
 import lombok.Data;
-import ru.practicum.explorewithme.dto.CategoryDto;
+import ru.practicum.explorewithme.dto.category.CategoryDto;
 import ru.practicum.explorewithme.dto.user.UserShortDto;
-import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.model.event.Location;
 
 @Data
-public class EventFullDto {
+public class EventFullDto implements EventDto {
 
     private Long id;
 

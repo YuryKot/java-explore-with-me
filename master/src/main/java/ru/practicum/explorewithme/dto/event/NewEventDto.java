@@ -2,7 +2,7 @@ package ru.practicum.explorewithme.dto.event;
 
 
 import lombok.Data;
-import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.model.event.Location;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

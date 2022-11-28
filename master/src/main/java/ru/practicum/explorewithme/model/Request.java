@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.model;
 
 import lombok.Data;
+import ru.practicum.explorewithme.model.event.Event;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,5 +25,6 @@ public class Request {
     @JoinColumn(name = "requester_id")
     private User requester;
 
+    @Enumerated(EnumType.STRING)
     private StatusRequest status;
 }

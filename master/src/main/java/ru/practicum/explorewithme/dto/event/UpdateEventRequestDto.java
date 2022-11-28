@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.dto;
+package ru.practicum.explorewithme.dto.event;
 
 import lombok.Data;
 
@@ -6,10 +6,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class UpdateEventRequestDto {
+public class UpdateEventRequestDto implements UpdateEventDto {
 
     @NotNull
-    private Long id;
+    private Long eventId;
 
     @Size(min = 20, max = 2000, message = "Annotation must be between 20 and 2000 characters")
     private String annotation;

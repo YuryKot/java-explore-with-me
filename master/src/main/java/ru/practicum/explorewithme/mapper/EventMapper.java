@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.NewEventDto;
-import ru.practicum.explorewithme.model.Event;
-import ru.practicum.explorewithme.model.EventState;
-import ru.practicum.explorewithme.model.Location;
+import ru.practicum.explorewithme.model.event.Event;
+import ru.practicum.explorewithme.model.event.EventState;
+import ru.practicum.explorewithme.model.event.Location;
 
 import javax.validation.ValidationException;
 import java.time.Duration;
@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 public class EventMapper {
-
 
 
     public static Event toEvent(NewEventDto newEventDto) {
@@ -47,11 +46,15 @@ public class EventMapper {
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventFullDto.setCreatedOn(formatter.format(event.getCreatedOn()));
+        eventFullDto.setDescription(event.getDescription());
+        eventFullDto.setEventDate(formatter.format(event.getEventDate()));
         eventFullDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventFullDto.setLocation(new Location(event.getLocationLat(), event.getLocationLon()));
         eventFullDto.setPaid(event.isPaid());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
-        eventFullDto.setPublishedOn(formatter.format(event.getPublishedOn()));
+        if (event.getPublishedOn() != null) {
+            eventFullDto.setPublishedOn(formatter.format(event.getPublishedOn()));
+        }
         eventFullDto.setRequestModeration(event.isRequestModeration());
         eventFullDto.setState(event.getState().toString());
         eventFullDto.setTitle(event.getTitle());
@@ -61,6 +64,7 @@ public class EventMapper {
     public static EventShortDto toEventShortDto(Event event) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         EventShortDto eventShortDto = new EventShortDto();
+        eventShortDto.setAnnotation(event.getAnnotation());
         eventShortDto.setId(event.getId());
         eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventShortDto.setEventDate(formatter.format(event.getEventDate()));
