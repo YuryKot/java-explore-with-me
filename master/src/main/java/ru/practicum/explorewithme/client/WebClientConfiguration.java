@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class WebClientConfiguration {
 
     @Value("${statistic.url}")
-    private String BASE_URL;
+    private String baseUrl;
     public static final int TIMEOUT = 10000;
 
     @Bean
@@ -31,7 +31,7 @@ public class WebClientConfiguration {
                 });
 
         return WebClient.builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
                 .build();
     }
