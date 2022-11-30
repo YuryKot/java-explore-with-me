@@ -12,6 +12,6 @@ public class NewCompilationDto {
 
     private Boolean pinned = false;
 
-    @NotNull
+    @NotNull(message = "Title don`t can be null")
     private String title;
 }

@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS events
     CONSTRAINT fk_events_to_categories FOREIGN KEY(category_id) REFERENCES categories(id),
     CONSTRAINT fk_events_to_users FOREIGN KEY(user_id) REFERENCES users(id)
 );
-
 CREATE TABLE IF NOT EXISTS compilations_events
 (
     events_id BIGINT NOT NULL,
