@@ -20,7 +20,8 @@ import java.util.List;
 public class ErrorHandler {
 
     @ExceptionHandler({CategoryNotFoundException.class, CompilationNotFoundException.class,
-    EventNotFoundException.class, RequestNotFoundExceprion.class, UserNotFoundException.class})
+    EventNotFoundException.class, RequestNotFoundExceprion.class, UserNotFoundException.class,
+    PublisherNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException e) {
         log.info(HttpStatus.BAD_REQUEST + ": " + e.getMessage());
@@ -46,7 +47,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.info(HttpStatus.BAD_REQUEST + ": " + e.getMessage());
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {
             errors.add(error.getField() + ": " + error.getDefaultMessage());
         }

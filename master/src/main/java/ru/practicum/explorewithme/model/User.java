@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -15,4 +16,12 @@ public class User {
     private String name;
 
     private String email;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "publishers",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "publisher_id") }
+    )
+    private Set<User> publishers;
 }

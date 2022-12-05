@@ -35,3 +35,13 @@ ER-диаграмма баз данных:
 2. 9090 - сервис статистики
 3. 6541 - БД основного сервиса
 4. 6542 - БД сервиса статистики
+
+### Дополнительная функциональность:
+Добавлена возможность подписываться на других пользователей и получать список актуальных событий, опубликованных этими пользователями.
+
+Для этого были реализованы следующие эндпоинты:
+* _GET_ [/users/{userId}/publishers](/users/{userId}/publishers) - получить список пользователей, на кого подписан
+* _POST_ [/users/{userId}/publishers/{publisherId}](/users/{userId}/publishers/{publisherId}) - подписаться на нового пользователя
+* _DELETE_ [/users/{userId}/publishers/{publisherId}](/users/{userId}/publishers/{publisherId}) - отписаться от пользователя
+* _GET_ [/users/{userId}/publishers/events](/users/{userId}/publishers/events) - получить все актуальные события пользователей, на кого подписан
+* _GET_ [/users/{userId}/publishers/events/{publisherId}](/users/{userId}/publishers/events/{publisherId}) - получить актуальные события конкретного пользователя, на кого подписан
