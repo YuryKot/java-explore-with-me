@@ -9,7 +9,9 @@ import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.NewEventDto;
 import ru.practicum.explorewithme.dto.event.UpdateEventRequestDto;
+import ru.practicum.explorewithme.dto.user.UserDto;
 import ru.practicum.explorewithme.service.event.EventService;
+import ru.practicum.explorewithme.service.publishers.PublisherService;
 import ru.practicum.explorewithme.service.request.RequestService;
 import ru.practicum.explorewithme.util.RequestBuilder;
 
@@ -29,6 +31,8 @@ public class PrivateController {
     private final EventService eventService;
 
     private final RequestService requestService;
+
+    private final PublisherService publisherService;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> getEvents(@PathVariable Long userId,
@@ -118,6 +122,48 @@ public class PrivateController {
                                                  HttpServletRequest request) {
         log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
         return requestService.cancelRequest(userId, requestId);
+    }
+
+    @GetMapping("/{userId}/publishers")
+    public List<UserDto> getPublishers(@PathVariable Long userId,
+                                       HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
+        return publisherService.getPublishers(userId);
+    }
+
+    @PostMapping("/{userId}/publishers/{publisherId}")
+    public void addPublisher(@PathVariable Long userId,
+                             @PathVariable Long publisherId,
+                             HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
+        publisherService.addPublisher(userId, publisherId);
+    }
+
+    @DeleteMapping("/{userId}/publishers/{publisherId}")
+    public void deletePublisher(@PathVariable Long userId,
+                                @PathVariable Long publisherId,
+                                HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
+        publisherService.deletePublisher(userId, publisherId);
+    }
+
+    @GetMapping("/{userId}/publishers/events")
+    public List<EventShortDto> getAllPublisherEvents(@PathVariable Long userId,
+                                                  @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                  @Positive @RequestParam(defaultValue = "10") int size,
+                                                  HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
+        return publisherService.getAllPublisherEvents(userId, from, size);
+    }
+
+    @GetMapping("/{userId}/publishers/events/{publisherId}")
+    public List<EventShortDto> getPublisherEvents(@PathVariable Long userId,
+                                                  @PathVariable Long publisherId,
+                                                  @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                  @Positive @RequestParam(defaultValue = "10") int size,
+                                                  HttpServletRequest request) {
+        log.info("Get new request: {}", RequestBuilder.getStringFromRequest(request));
+        return publisherService.getPublisherEvents(userId, publisherId, from, size);
     }
 
 }

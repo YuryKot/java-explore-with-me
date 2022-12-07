@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS compilations CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS compilations_events CASCADE;
 DROP TABLE IF EXISTS requests CASCADE;
+DROP TABLE IF EXISTS publishers CASCADE;
 
 CREATE TABLE IF NOT EXISTS users
 (
@@ -62,4 +63,12 @@ CREATE TABLE IF NOT EXISTS requests
     status varchar(20) NOT NULL,
     CONSTRAINT fk_requests_to_users FOREIGN KEY(requester_id) REFERENCES users(id),
     CONSTRAINT fk_requests_to_events FOREIGN KEY(event_id) REFERENCES events(id)
+);
+
+CREATE TABLE IF NOT EXISTS publishers
+(
+    user_id BIGINT NOT NULL,
+    publisher_id BIGINT NOT NULL,
+    CONSTRAINT fk_friends_to_user_id FOREIGN KEY(user_id) REFERENCES users(id),
+    CONSTRAINT fk_friends_to_friend_id FOREIGN KEY(publisher_id) REFERENCES users(id)
 );

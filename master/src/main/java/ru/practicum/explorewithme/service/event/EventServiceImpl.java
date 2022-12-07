@@ -249,6 +249,24 @@ public class EventServiceImpl implements EventService {
         return eventFullDtoList;
     }
 
+    @Override
+    public List<EventShortDto> getActualEvents(List<Long> initiatorIds, int from, int size) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QEvent qEvent = QEvent.event;
+        QRequest qRequest = QRequest.request;
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qEvent.eventDate.after(LocalDateTime.now()));
+        booleanBuilder.and(qEvent.state.eq(EventState.PUBLISHED));
+        booleanBuilder.and((qRequest.status.eq(StatusRequest.CONFIRMED).or(qRequest.isNull())));
+        booleanBuilder.and(qEvent.initiator.id.in(initiatorIds));
+
+        List<Tuple> events = getEventsWithEventsDateSort(true, queryFactory, qEvent, qRequest,
+                booleanBuilder, from, size);
+        List<EventShortDto> eventsDto = mapListEventsToEventShortDto(events, qEvent, qRequest);
+        setViews(eventsDto);
+        return eventsDto;
+    }
+
     private User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id));

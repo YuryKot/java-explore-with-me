@@ -32,4 +32,6 @@ public interface EventService {
 
     List<EventFullDto> getEvents(List<Long> users, List<String> states, List<Long> categories, String rangeStart,
                                  String rangeEnd, int from, int size);
+
+    List<EventShortDto> getActualEvents(List<Long> initiatorIds, int from, int size);
 }
